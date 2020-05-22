@@ -66,13 +66,18 @@ def destaque():
     return jsonify([carro.to_json() for carro in carros])
 
 
-@carros.route('/carros/destacar/<id>')
+@carros.route('/carros/destacar/<id>', methods=['PUT'])
 def destacar(id):
-    # obtém registro dos carros que estão em destaque
-    carros = Carro.query.order_by(Carro.destaque).filter(
-        Carro.destaque.like(f'%{"x"}%')).all()
-    # converte cada carro para o formato json
-    return jsonify([carro.to_json() for carro in carros])
+    # obtém o registro a ser alterado (ou gera um erro 404 - not found)
+    carro = Carro.query.get_or_404(id)
+
+    # recupera os dados enviados na requisição
+    carro.destaque = request.json['destaque']
+
+    # altera (pois o id já existe)
+    db.session.add(carro)
+    db.session.commit()
+    return jsonify(carro.to_json()), 204
     
 
 

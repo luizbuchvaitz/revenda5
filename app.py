@@ -7,11 +7,15 @@ from resources.usuarios import usuarios
 from flask_jwt_extended import JWTManager
 from blacklist import blacklist
 import smtplib
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config.from_object(config)
 db.init_app(app)
 jwt = JWTManager(app)
+#LIBERA TODAS AS ROTAS (NÃO É A MELHOR, OPÇÃO)
+#A MELHOR FORMA, É A VISTA NO EXEMPLO ANTERIOR, INDICAR QUAIS ROTAS DEVE SER LIBERADAS PARA ACESSO CORS
+CORS(app)
 
 app.register_blueprint(carros)
 app.register_blueprint(marcas)
