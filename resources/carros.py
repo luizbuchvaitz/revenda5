@@ -29,7 +29,7 @@ def consulta(id):
     return jsonify(carro.to_json()), 200
 
 
-@carros.route('/carros/<int:id>', methods=['PUT'])
+@carros.route('/carros/alterar/<int:id>', methods=['PUT'])
 def alteracao(id):
     # obtém o registro a ser alterado (ou gera um erro 404 - not found)
     carro = Carro.query.get_or_404(id)
@@ -68,13 +68,16 @@ def destaque():
 
 @carros.route('/carros/destacar/<id>', methods=['PUT'])
 def destacar(id):
-    # obtém o registro a ser alterado (ou gera um erro 404 - not found)
     carro = Carro.query.get_or_404(id)
 
     # recupera os dados enviados na requisição
     carro.destaque = request.json['destaque']
 
-    # altera (pois o id já existe)
+    if carro['destaque'] == " ":
+        carro['destaque'] = "x"
+    else:
+        carro['destaque'] = " "
+
     db.session.add(carro)
     db.session.commit()
     return jsonify(carro.to_json()), 204
