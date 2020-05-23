@@ -66,22 +66,19 @@ def destaque():
     return jsonify([carro.to_json() for carro in carros])
 
 
-@carros.route('/carros/destacar/<id>', methods=['PUT'])
+@carros.route('/carros/destacar/<int:id>', methods=['PUT'])
 def destacar(id):
+    # obtém o registro a ser alterado ou gera um error 404 - not found
     carro = Carro.query.get_or_404(id)
 
-    # recupera os dados enviados na requisição
-    carro.destaque = request.json['destaque']
-
-    if carro['destaque'] == " ":
-        carro['destaque'] = "x"
+    if carro.destaque == 'x':
+        carro.destaque = ' '
     else:
-        carro['destaque'] = " "
+        carro.destaque = 'x'
 
     db.session.add(carro)
     db.session.commit()
-    return jsonify(carro.to_json()), 204
-    
+    return 'Tudo certo :)'
 
 
 @carros.route('/carros/filtro/<palavra>')
